@@ -1,4 +1,0 @@
-/home/dheeraj_bhogisetty/optimal_control/homework_2/task_1/build/CMakeFiles/task_1_format.dir
-/home/dheeraj_bhogisetty/optimal_control/homework_2/task_1/build/CMakeFiles/task_1.dir
-/home/dheeraj_bhogisetty/optimal_control/homework_2/task_1/build/CMakeFiles/edit_cache.dir
-/home/dheeraj_bhogisetty/optimal_control/homework_2/task_1/build/CMakeFiles/rebuild_cache.dir
