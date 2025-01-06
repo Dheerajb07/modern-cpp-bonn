@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/home/dheeraj_bhogisetty/optimal_control/homework_2/task_2/build",
-  "command": "/usr/bin/c++   -std=gnu++20 -o CMakeFiles/task_2.dir/src/main.cpp.o -c /home/dheeraj_bhogisetty/optimal_control/homework_2/task_2/src/main.cpp",
-  "file": "/home/dheeraj_bhogisetty/optimal_control/homework_2/task_2/src/main.cpp"
-}
-]
