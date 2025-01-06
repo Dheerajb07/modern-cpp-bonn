@@ -1,6 +1,0 @@
-/home/dheeraj_bhogisetty/optimal_control/homework_3/build/CMakeFiles/html_writer.dir
-/home/dheeraj_bhogisetty/optimal_control/homework_3/build/CMakeFiles/image_browser.dir
-/home/dheeraj_bhogisetty/optimal_control/homework_3/build/CMakeFiles/test_html_writer.dir
-/home/dheeraj_bhogisetty/optimal_control/homework_3/build/CMakeFiles/test_image_browser.dir
-/home/dheeraj_bhogisetty/optimal_control/homework_3/build/CMakeFiles/edit_cache.dir
-/home/dheeraj_bhogisetty/optimal_control/homework_3/build/CMakeFiles/rebuild_cache.dir

@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../lib/libimage_browser.a CMakeFiles/image_browser.dir/src/image_browser.cpp.o
-/usr/bin/ranlib ../lib/libimage_browser.a
