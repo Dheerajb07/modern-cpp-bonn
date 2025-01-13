@@ -23,6 +23,10 @@ public:
 
   std::vector<T> vector() const { return std_vector; };
 
+  void set_name(const std::string &name) { type_name = name;};
+
+  void set_vector(const std::vector<T> &vector) { std_vector = vector;};
+
   bool empty() { return type_name.empty() || std_vector.empty(); };
 
   size_t size() { return type_name.size() + std_vector.size(); };
