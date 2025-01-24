@@ -17,7 +17,7 @@ namespace ipb::serialization {
  * @param m        The input cv::Mat you want to serialize.
  * @param filename The filename of the file where the cv::Mat will be written.
  */
-void Serialize(const cv::Mat& m, const std::string& filename);
+void Serialize(const cv::Mat& img, const std::string& filename);
 
 /**
  * @brief Reads a binary file representing a cv::Mat type and outputs the

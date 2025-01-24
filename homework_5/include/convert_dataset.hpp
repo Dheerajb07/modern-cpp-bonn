@@ -28,7 +28,7 @@ namespace ipb::serialization::sifts {
  *
  * @param img_path The path where the png image files are located.
  */
-void ConvertDataset(const std::filesystem::path& img_path);
+void ConvertDataset(const std::filesystem::path& data_path);
 
 /**
  * @brief This helper function will allow you to read from a binary-like dataset
