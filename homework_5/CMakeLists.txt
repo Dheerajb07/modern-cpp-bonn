@@ -32,6 +32,6 @@ target_link_libraries(trial mat_serialization convert_dataset ${OpenCV_LIBS})
 
 # dataset trial
 add_executable(dataset_trial ${PROJECT_SOURCE_DIR}/src/dataset_trial.cpp)
-target_link_libraries(trial mat_serialization convert_dataset ${OpenCV_LIBS})
+target_link_libraries(dataset_trial mat_serialization convert_dataset ${OpenCV_LIBS})
 
 
