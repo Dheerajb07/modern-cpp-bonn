@@ -22,7 +22,7 @@ int main() {
   // std::cout << imgPath << std::endl;
 
   // Read image
-  cv::Mat img = cv::imread(imgPath, cv::IMREAD_COLOR);
+  cv::Mat img = cv::imread(imgPath, cv::IMREAD_GRAYSCALE);
 
   // return error if image not found
   if (!img.data) {
@@ -31,7 +31,7 @@ int main() {
   }
 
   // print image properties
-  // print_properties(img);
+  print_properties(img);
   // std::cout << (int)img.at<unsigned char>(0,0,0) << std::endl;
 
   // serialize img

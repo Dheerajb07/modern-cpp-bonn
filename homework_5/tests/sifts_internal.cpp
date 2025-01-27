@@ -12,19 +12,19 @@
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <opencv2/xfeatures2d.hpp>
+#include <opencv2/features2d.hpp>
 
 using std::string;
 using std::vector;
 
-using cv::xfeatures2d::SiftDescriptorExtractor;
-using cv::xfeatures2d::SiftFeatureDetector;
+// using cv::xfeatures2d::SiftDescriptorExtractor;
+// using cv::xfeatures2d::SiftFeatureDetector;
 
 std::tuple<cv::Mat, cv::Mat> ComputeSifts(const string& fileName) {
   const cv::Mat kInput = cv::imread(fileName, cv::IMREAD_GRAYSCALE);
 
   // detect key points
-  auto detector = SiftFeatureDetector::create();
+  auto detector =cv:: SiftFeatureDetector::create();
   vector<cv::KeyPoint> keypoints;
   detector->detect(kInput, keypoints);
 
@@ -34,7 +34,7 @@ std::tuple<cv::Mat, cv::Mat> ComputeSifts(const string& fileName) {
 
   // extract the SIFT descriptors
   cv::Mat descriptors;
-  auto extractor = SiftDescriptorExtractor::create();
+  auto extractor = cv::SiftDescriptorExtractor::create();
   extractor->compute(kInput, keypoints, descriptors);
 
   return std::make_tuple(descriptors, image_with_keypoints);
