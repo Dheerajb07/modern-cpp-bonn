@@ -20,12 +20,11 @@ void print_properties(cv::Mat &img) {
 
 int main() {
   // set dataset path
-  std::filesystem::path dataset_dir_path =
-      std::filesystem::current_path() / "data/freiburg";
-  std::filesystem::path images_dir_path = dataset_dir_path / "images";
-  std::filesystem::path bin_dir_path = dataset_dir_path / "bin";
-  std::filesystem::create_directory(bin_dir_path);
+  std::filesystem::path images_dir_path = "data/freiburg/images";
+  std::filesystem::path bin_dir_path = "data/freiburg/bin";
+//   std::filesystem::create_directory(bin_dir_path);
 
+  /* 
   // keypoint detector init
   auto detector = cv::SiftFeatureDetector::create();
   // SIFT descriptor extractor init
@@ -66,4 +65,22 @@ int main() {
       ipb::serialization::Serialize(sift_descriptor, bin_filepath);
     }
   }
+  */
+
+    // test serialization
+    std::cout << "********TESTING DATA SERIALIZATION**********" << std::endl;
+    
+    ipb::serialization::sifts::ConvertDataset(images_dir_path);
+    
+    std::cout << "**********SERIALIZATION COMPLETE************" << std::endl << std::endl;
+    
+    // test deserialization
+    std::cout << "**********TESTING DATA DESERIALIZATION**********" << std::endl;
+    std::vector<cv::Mat> dataset = ipb::serialization::sifts::LoadDataset(bin_dir_path);
+
+    std::cout << "Loaded Dataset : " << dataset.size() << " files" << std::endl;
+
+    std::cout << "************DESERIALIZATION COMPLETE************" << std::endl << std::endl;
+
+    return 0;
 }

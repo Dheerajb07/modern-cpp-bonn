@@ -21,7 +21,7 @@ target_link_libraries(mat_serialization ${OpenCV_LIBS})
 
 # convert_dataset library
 add_library(convert_dataset ${PROJECT_SOURCE_DIR}/include/convert_dataset.hpp ${PROJECT_SOURCE_DIR}/src/convert_dataset.cpp)
-target_link_libraries(convert_dataset ${OpenCV_LIBS})
+target_link_libraries(convert_dataset mat_serialization ${OpenCV_LIBS})
 
 ## COMPILE EXECUTABLES
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
@@ -31,7 +31,7 @@ add_executable(trial ${PROJECT_SOURCE_DIR}/src/trial.cpp)
 target_link_libraries(trial mat_serialization convert_dataset ${OpenCV_LIBS})
 
 # dataset trial
-# add_executable(dataset_trial ${PROJECT_SOURCE_DIR}/src/dataset_trial.cpp)
-# target_link_libraries(dataset_trial mat_serialization convert_dataset ${OpenCV_LIBS})
+add_executable(dataset_trial ${PROJECT_SOURCE_DIR}/src/dataset_trial.cpp)
+target_link_libraries(dataset_trial mat_serialization convert_dataset ${OpenCV_LIBS})
 
 add_subdirectory(tests/)
