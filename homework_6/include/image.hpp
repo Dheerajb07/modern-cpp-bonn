@@ -1,36 +1,32 @@
 #ifndef IMAGE_HPP_
 #define IMAGE_HPP_
-#include <vector>
+
 #include <cstdint>
 #include <string>
-#include "io_tools.hpp"
+#include <vector>
 
 namespace igg {
 class Image {
-    private:
-    int rows_;
-    int cols_;
-    std::vector<uint8_t> data_;
-    
-    public:
-    Image(int rows, int cols): rows_(rows), cols_(cols){};
-    
-    int rows() const{ return rows_;};
-    int cols() const{ return cols_;};
+private:
+  int rows_;
+  int cols_;
+  uint8_t max_val_ = 255;
+  std::vector<uint8_t> data_{};
 
-    uint8_t& at(int row, int col){ return data_[row*cols_ + col];};
+public:
+  Image(){};
+  Image(int rows, int cols) : rows_(rows), cols_(cols) {};
 
-    bool FillFromPgm(const std::string& file_name){
-        igg::io_tools::ImageData img_data = igg::io_tools::ReadFromPgm(file_name);
-        rows_ = img_data.rows;
-        cols_ = img_data.cols;
-        data_ = img_data.data;
-    }
+  int rows() const { return rows_; };
+  int cols() const { return cols_; };
+  uint8_t max_value() const {return max_val_;};
+  const std::vector<uint8_t>& data() const {return data_;};
 
-    
+  uint8_t &at(int row, int col) { return data_[row * cols_ + col]; };
 
+  bool FillFromPgm(const std::string &file_name); 
 
-
+  void WriteToPgm(const std::string &file_name);
 };
 } // namespace igg
 
