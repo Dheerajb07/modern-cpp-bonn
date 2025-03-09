@@ -23,6 +23,8 @@ add_library(io_tools ${PROJECT_SOURCE_DIR}/include/io_tools/io_tools.hpp ${PROJE
 add_library(image ${PROJECT_SOURCE_DIR}/include/image.hpp ${PROJECT_SOURCE_DIR}/include/image.cpp)
 target_link_libraries(image io_tools)
 
-# compile executalble
-add_executable(image_trial ${PROJECT_SOURCE_DIR}/dev/image_trial.cpp)
-target_link_libraries(image_trial image ${OpenCV_LIBS})
+# compile executables
+add_subdirectory(dev/)
+
+# compile tests
+add_subdirectory(tests/)

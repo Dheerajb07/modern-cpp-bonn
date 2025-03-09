@@ -12,7 +12,7 @@ TEST(TestImageIO, InitFromFileSize) {
   Image image;
   ASSERT_EQ(0, image.rows());
   ASSERT_EQ(0, image.cols());
-  ASSERT_TRUE(image.FillFromPgm("data/dummy_file.pgm"));
+  ASSERT_TRUE(image.FillFromPgm("tests/data/dummy_file.pgm"));
   ASSERT_EQ(10, image.rows());
   ASSERT_EQ(10, image.cols());
 }
@@ -21,7 +21,7 @@ TEST(TestImageIO, InitFromFileContents) {
   Image image;
   ASSERT_EQ(0, image.rows());
   ASSERT_EQ(0, image.cols());
-  ASSERT_TRUE(image.FillFromPgm("data/dummy_file.pgm"));
+  ASSERT_TRUE(image.FillFromPgm("tests/data/dummy_file.pgm"));
   ASSERT_EQ(10, image.rows());
   ASSERT_EQ(10, image.cols());
   for (int r = 0; r < image.rows(); ++r) {
