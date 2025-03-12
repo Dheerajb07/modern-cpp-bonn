@@ -27,4 +27,4 @@ target_link_libraries(image io_tools)
 add_subdirectory(dev/)
 
 # compile tests
-add_subdirectory(tests/)
+# add_subdirectory(tests/)

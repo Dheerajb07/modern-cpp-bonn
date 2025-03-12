@@ -37,7 +37,14 @@ public:
   // write image data to pgm file
   void WriteToPgm(const std::string &file_name);
 
+  // compute histogram
   std::vector<float> ComputeHistogram(int bins) const;
+
+  // downscale image
+  void DownScale(int scale);
+
+  // upscale image
+  void UpScale(int scale);
 };
 } // namespace igg
 

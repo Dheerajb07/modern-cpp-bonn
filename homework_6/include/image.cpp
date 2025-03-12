@@ -38,4 +38,40 @@ std::vector<float> Image::ComputeHistogram(int bins) const {
   }
   return histogram;
 }
+
+void Image::DownScale(int scale) {
+  // new vector to store scaled image data
+  std::vector<uint8_t> scaled_data = {};
+  // loop over data_ : skip/select pixels 'scale' length apart
+  for (int i = 0; i < rows_; i += scale) {
+    for (int j = 0; j < cols_; j += scale) {
+      scaled_data.push_back(data_[i * cols_ + j]);
+    }
+  }
+  // set data
+  data_ = scaled_data;
+  rows_ = rows_ / scale;
+  cols_ = cols_ / scale;
+}
+
+void Image::UpScale(int scale) {
+  // new vector to store scaled image data
+  std::vector<uint8_t> scaled_data(rows_* cols_ * scale, 0);
+  // loop over data_ : fill pixels
+  for (int i = 0; i < rows_; i++) {
+    for (int j = 0; j < cols_; j++) {
+      // fill pixel and neighbours
+      for (int r = i * scale; r < (i + 1) * scale; r++) {
+        for (int c = j * scale; c < (j + 1) * scale; c++) {
+          scaled_data[r * cols_ * scale + c] = data_[i * cols_ + j];
+        }
+      }
+    }
+  }
+  // set data
+  rows_ = rows_ * scale;
+  cols_ = cols_ * scale;
+  // data_.resize(scaled_data.size(),0);
+  data_ = scaled_data;
+}
 } // namespace igg
