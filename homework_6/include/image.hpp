@@ -19,6 +19,7 @@ public:
     data_.resize(rows * cols, 0);
   };
 
+  // getter functions
   int rows() const { return rows_; };
   int cols() const { return cols_; };
   uint8_t max_value() const { return max_val_; };
@@ -30,9 +31,13 @@ public:
   // fill pixel value at index (row,col)
   uint8_t &at(int row, int col) { return data_[row * cols_ + col]; };
 
+  // fill image data from pgm file
   bool FillFromPgm(const std::string &file_name);
 
+  // write image data to pgm file
   void WriteToPgm(const std::string &file_name);
+
+  std::vector<float> ComputeHistogram(int bins) const;
 };
 } // namespace igg
 

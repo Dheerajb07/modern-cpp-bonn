@@ -15,8 +15,8 @@ TEST(TestHistogram, OneBinHistogram) {
   Image image;
   ASSERT_EQ(0, image.rows());
   ASSERT_EQ(0, image.cols());
-  ASSERT_TRUE(image.FillFromPgm("data/dummy_file.pgm"));
-  const auto& image_ref = image;
+  ASSERT_TRUE(image.FillFromPgm("tests/data/dummy_file.pgm"));
+  const auto &image_ref = image;
   auto histogram = image_ref.ComputeHistogram(1);
   ASSERT_EQ(1, histogram.size());
   float eps = 0.001f;
@@ -27,8 +27,8 @@ TEST(TestHistogram, WhiteImageBlackDiagonal) {
   Image image;
   ASSERT_EQ(0, image.rows());
   ASSERT_EQ(0, image.cols());
-  ASSERT_TRUE(image.FillFromPgm("data/dummy_file.pgm"));
-  const auto& image_ref = image;
+  ASSERT_TRUE(image.FillFromPgm("tests/data/dummy_file.pgm"));
+  const auto &image_ref = image;
   int size = 10;
   auto histogram = image_ref.ComputeHistogram(size);
   ASSERT_EQ(size, histogram.size());
