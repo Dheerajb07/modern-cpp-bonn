@@ -15,7 +15,7 @@ int main() {
   // load image
   // pgm file path
   std::string pgm_path_lena = "data/lena.ascii.pgm";
-  std::string pgm_path_dummy = "tests/data/dummy_file.pgm";
+  // std::string pgm_path_dummy = "tests/data/dummy_file.pgm";
 
   // fill image from pgm
   igg::Image img;
@@ -26,15 +26,15 @@ int main() {
   }
 
   // original image
-//   display_image(img, "original");
-  
+  display_image(img, "original");
+
   // downscale image
-  img.DownScale(3);
+  img.DownScale(2);
   display_image(img, "downscaled");
 
   // upscale image
   img.UpScale(2);
-  display_image(img,"upscaled");
+  display_image(img, "upscaled");
 
   return 0;
 }

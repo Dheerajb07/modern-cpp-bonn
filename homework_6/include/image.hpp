@@ -35,7 +35,7 @@ public:
   bool FillFromPgm(const std::string &file_name);
 
   // write image data to pgm file
-  void WriteToPgm(const std::string &file_name);
+  void WriteToPgm(const std::string &file_name) const;
 
   // compute histogram
   std::vector<float> ComputeHistogram(int bins) const;

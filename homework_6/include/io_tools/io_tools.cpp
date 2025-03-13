@@ -14,7 +14,7 @@
 
 namespace igg::io_tools {
 
-ImageData ReadFromPgm(const std::string& file_name) {
+ImageData ReadFromPgm(const std::string &file_name) {
   std::ifstream in(file_name, std::ios_base::in);
   if (!in) {
     return {0, 0, 0, {}};
@@ -39,7 +39,7 @@ ImageData ReadFromPgm(const std::string& file_name) {
   return {rows, cols, static_cast<uint8_t>(max_val), data};
 }
 
-bool WriteToPgm(const ImageData& image_data, const std::string& file_name) {
+bool WriteToPgm(const ImageData &image_data, const std::string &file_name) {
   std::ofstream out(file_name);
   if (!out) {
     return false;
@@ -57,4 +57,4 @@ bool WriteToPgm(const ImageData& image_data, const std::string& file_name) {
   return true;
 }
 
-}  // namespace igg::io_tools
+} // namespace igg::io_tools
