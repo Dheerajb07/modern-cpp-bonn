@@ -7,6 +7,8 @@ if(ENABLE_CPPCHECK)
         ${CPPCHECK}
         --enable=all
         --suppress=missingInclude
+        --suppress=unusedFunction:${PROJECT_SOURCE_DIR}/include/image.cpp
+        --suppress=unusedFunction:${PROJECT_SOURCE_DIR}/include/io_tools/io_tools.cpp
         --inconclusive)
   else()
     message(SEND_ERROR "cppcheck requested but executable not found")
