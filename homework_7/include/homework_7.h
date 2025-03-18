@@ -2,6 +2,6 @@
 #define HOMEWORK_7_H
 
 #include "convert_dataset.hpp"
-// #include "serialize.hpp"
+#include "k_means.hpp"
 
 #endif
