@@ -7,10 +7,10 @@
 std::vector<cv::Mat> GetDummyData() {
   // init some parameters
   const int rows_num = 1;
-  const int cols_num = 10;
+  const int cols_num = 5;
   static std::vector<cv::Mat> data;
 
-  for (int i = 0; i < 100; i += 20) {
+  for (int i = 0; i < 10; i += 2) {
     for (size_t j = 0; j < 5; j++) {
       data.push_back(cv::Mat_<float>(rows_num, cols_num, i));
     }
@@ -54,7 +54,13 @@ int main() {
 
   const int dict_size = gt_cluster.rows;
   const int iterations = 10;
-  auto centroids = ipb::kMeans(data, dict_size, iterations);
+  cv::Mat centroids = ipb::kMeans(data, dict_size, iterations);
+
+  std::cout << "Final Centroids : " << std::endl;
+  std::cout << centroids << std::endl;
+
+  std::cout << "Correct Centroids : " << std::endl;
+  std::cout << gt_cluster << std::endl;
 
   return 0;
 }

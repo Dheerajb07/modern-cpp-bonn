@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <iostream>
+#include <numeric>
 #include <opencv2/core.hpp>
 #include <set>
 #include <string>
@@ -17,6 +18,8 @@ void clusterPoints(const cv::Mat &points, const cv::Mat &centroids,
                    std::vector<cv::Mat> &cluster);
 void calculate_centroids(const std::vector<cv::Mat> &cluster,
                          cv::Mat &centroids);
+std::vector<float> calculate_varaince(const std::vector<cv::Mat> &cluster,
+                                      const cv::Mat &centroids);
 
 // print funcs
 void print_vector(const std::vector<float> &vec, const std::string &vec_name);
@@ -35,17 +38,20 @@ cv::Mat ipb::kMeans(const std::vector<cv::Mat> &dataset, int k, int max_iter) {
   // 0. create an unordered map to store centroids and variations for each
   // iteration
   std::vector<cv::Mat> centroid_list;
-  std::vector<std::vector<float>> variation_list;
+  std::vector<float> total_variance;
 
   for (int iter = 0; iter < max_iter; iter++) {
-    // 1. Select k centroids randomly from points mat
+    std::cout << std::endl;
+    std::cout << "Iteration  " << iter << "..." << std::endl;
+    /* 1. Select k centroids randomly from points mat */
     cv::Mat centroids;
     get_random_centroids(points, k, centroids);
     //   print_mat_data(centroids, "centroids");  // sanity check
 
+    /* 2. Cluster Points */
+    std::vector<cv::Mat> cluster;
     while (true) {
       // cluster points based on the centroids
-      std::vector<cv::Mat> cluster;
       clusterPoints(points, centroids, cluster);
 
       print_cluster_data(cluster); // sanity check clusters
@@ -56,27 +62,41 @@ cv::Mat ipb::kMeans(const std::vector<cv::Mat> &dataset, int k, int max_iter) {
 
       // Convergence: L2 norm < 1e-6
       auto centroid_diff = cv::norm(centroids - new_centroids, cv::NORM_L2);
-      std::cout << "centroid Norm: " << centroid_diff << std::endl;
+      // std::cout << "centroid Norm: " << centroid_diff << std::endl;
       if (centroid_diff < 1e-6) {
-        std::cout << "Clusters converged in " << iter << " iterations!"
-                  << std::endl;
+        // std::cout << "Clusters converged in " << iter << " iterations!"
+        //           << std::endl;
         break;
       }
 
       // update centroids;
       centroids = new_centroids.clone();
     }
-    // save centroids to map
+    /* 3. calculate total variance for the current kmeans iteration */
+    // calc variance of each cluster
+    std::vector<float> variance = calculate_varaince(cluster, centroids);
+
+    // calc sum of variance
+    float variance_sum =
+        std::accumulate(variance.begin(), variance.end(), 0.0f);
+    total_variance.push_back(variance_sum);
+    std::cout << "Total Variance : " << variance_sum << std::endl;
+
+    // save centroids to list
     centroid_list.push_back(centroids.clone());
-
-    /* TODO: calc variation */ 
-
     // print_mat_data(centroids, "centroids");
   }
 
   /* TODO: return centroid with minimum variance */
+  // get lowest total variance idx
+  auto min_var_iter =
+      std::min_element(total_variance.begin(), total_variance.end());
+  int min_var_idx = std::distance(total_variance.begin(), min_var_iter);
 
-  return centroids;
+  print_vector(total_variance, "TotalVariance Vector");
+  std::cout << min_var_idx << std::endl;
+
+  return centroid_list[min_var_idx];
 }
 
 /*********************
@@ -163,6 +183,46 @@ void calculate_centroids(const std::vector<cv::Mat> &cluster,
       centroids.row(cluster_idx) = points_avg;
     }
   }
+}
+
+std::vector<float> calculate_varaince(const std::vector<cv::Mat> &cluster,
+                                      const cv::Mat &centroids) {
+  std::cout << "Variance Calculation ..." << std::endl;
+  // no of clusters
+  int k = centroids.rows;
+  // init vector
+  std::vector<float> variance(k, 1e6);
+
+  for (int cluster_idx = 0; cluster_idx < k; cluster_idx++) {
+    // get mean for cluster
+    cv::Mat mean = centroids.row(cluster_idx);
+    cv::Mat points = cluster[cluster_idx];
+    if (points.empty()) {
+      continue;
+    }
+    // Distance Vector
+    // calc dist of each point to centroid
+    std::vector<float> dist(points.rows, 1e6);
+    for (int point_idx = 0; point_idx < points.rows; point_idx++) {
+      dist[point_idx] = cv::norm(points.row(point_idx) - mean, cv::NORM_L2);
+    }
+    print_vector(dist, "distance");
+
+    // Compute mean
+    float avg = std::accumulate(dist.begin(), dist.end(), 0.0) / dist.size();
+    std::cout << "Mean: " << avg << std::endl;
+    // Compute variance
+    float sigma_2 =
+        std::accumulate(dist.begin(), dist.end(), 0.0,
+                        [avg](float sum, float value) {
+                          return sum + (value - avg) * (value - avg);
+                        }) /
+        dist.size();
+    std::cout << "Variance: " << sigma_2 << std::endl;
+    variance[cluster_idx] = sigma_2;
+  }
+  print_vector(variance, "variance vector");
+  return variance;
 }
 
 /**
