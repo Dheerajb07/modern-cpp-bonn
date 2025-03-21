@@ -14,10 +14,17 @@
 // k_means funcs
 void get_random_centroids(const cv::Mat &points, const int k,
                           cv::Mat &centroids);
+
+int get_min_idx(const std::vector<float> &vec);
+
+std::vector<float> calculate_distances(cv::Mat fromPoint, cv::Mat toPoints);
+
 void clusterPoints(const cv::Mat &points, const cv::Mat &centroids,
                    std::vector<cv::Mat> &cluster);
+
 void calculate_centroids(const std::vector<cv::Mat> &cluster,
                          cv::Mat &centroids);
+
 std::vector<float> calculate_varaince(const std::vector<cv::Mat> &cluster,
                                       const cv::Mat &centroids);
 
@@ -37,66 +44,69 @@ cv::Mat ipb::kMeans(const std::vector<cv::Mat> &dataset, int k, int max_iter) {
 
   // 0. create an unordered map to store centroids and variations for each
   // iteration
-  std::vector<cv::Mat> centroid_list;
-  std::vector<float> total_variance;
+  // std::vector<cv::Mat> centroid_list;
+  // std::vector<float> total_variance;
 
+  /* 1. Select k centroids randomly from points mat */
+  cv::Mat centroids;
+  get_random_centroids(points, k, centroids);
+  std::cout << "Randomized centroids" << std::endl << centroids << std::endl;
+  // print_mat_data(centroids, "centroids"); // sanity check
+
+  std::vector<cv::Mat> cluster;
+  /* 2. Cluster Points */
   for (int iter = 0; iter < max_iter; iter++) {
     std::cout << std::endl;
     std::cout << "Iteration  " << iter << "..." << std::endl;
-    /* 1. Select k centroids randomly from points mat */
-    cv::Mat centroids;
-    get_random_centroids(points, k, centroids);
-    //   print_mat_data(centroids, "centroids");  // sanity check
 
-    /* 2. Cluster Points */
-    std::vector<cv::Mat> cluster;
-    while (true) {
-      // cluster points based on the centroids
-      clusterPoints(points, centroids, cluster);
+    // while (true) {
+    // cluster points based on the centroids
+    clusterPoints(points, centroids, cluster);
 
-      print_cluster_data(cluster); // sanity check clusters
+    print_cluster_data(cluster); // sanity check clusters
 
-      // Re-calulate centroids
-      cv::Mat new_centroids = centroids.clone();
-      calculate_centroids(cluster, new_centroids);
+    // Re-calulate centroids
+    cv::Mat new_centroids = centroids.clone();
+    calculate_centroids(cluster, new_centroids);
 
-      // Convergence: L2 norm < 1e-6
-      auto centroid_diff = cv::norm(centroids - new_centroids, cv::NORM_L2);
-      // std::cout << "centroid Norm: " << centroid_diff << std::endl;
-      if (centroid_diff < 1e-6) {
-        // std::cout << "Clusters converged in " << iter << " iterations!"
-        //           << std::endl;
-        break;
-      }
-
-      // update centroids;
-      centroids = new_centroids.clone();
+    // Convergence: L2 norm < 1e-6
+    auto centroid_diff = cv::norm(centroids - new_centroids, cv::NORM_L2);
+    // std::cout << "centroid Norm: " << centroid_diff << std::endl;
+    if (centroid_diff < 1e-6) {
+      // std::cout << "Clusters converged in " << iter << " iterations!"
+      //           << std::endl;
+      std::cout << "Converged Centroids" << std::endl;
+      std::cout << centroids << std::endl;
+      break;
     }
+
+    // update centroids;
+    centroids = new_centroids.clone();
+    // }
     /* 3. calculate total variance for the current kmeans iteration */
     // calc variance of each cluster
-    std::vector<float> variance = calculate_varaince(cluster, centroids);
+    // std::vector<float> variance = calculate_varaince(cluster, centroids);
 
     // calc sum of variance
-    float variance_sum =
-        std::accumulate(variance.begin(), variance.end(), 0.0f);
-    total_variance.push_back(variance_sum);
-    std::cout << "Total Variance : " << variance_sum << std::endl;
+    // float variance_sum =
+    //     std::accumulate(variance.begin(), variance.end(), 0.0f);
+    // total_variance.push_back(variance_sum);
+    // std::cout << "Total Variance : " << variance_sum << std::endl;
 
     // save centroids to list
-    centroid_list.push_back(centroids.clone());
+    // centroid_list.push_back(centroids.clone());
+
     // print_mat_data(centroids, "centroids");
   }
 
+  // print_vector(total_variance, "TotalVariance Vector");
+
   /* TODO: return centroid with minimum variance */
   // get lowest total variance idx
-  auto min_var_iter =
-      std::min_element(total_variance.begin(), total_variance.end());
-  int min_var_idx = std::distance(total_variance.begin(), min_var_iter);
+  // int min_var_idx = get_min_idx(total_variance);
+  // std::cout << min_var_idx << std::endl;
 
-  print_vector(total_variance, "TotalVariance Vector");
-  std::cout << min_var_idx << std::endl;
-
-  return centroid_list[min_var_idx];
+  return centroids;
 }
 
 /*********************
@@ -129,15 +139,84 @@ void get_random_centroids(const cv::Mat &points, const int k,
   std::cout << std::endl;
 }
 
+// void get_random_centroids(const cv::Mat &points, const int k, cv::Mat
+// &centroids) {
+//   int num_points = points.rows;
+//   if (num_points == 0 || k <= 0) return;
+
+//   // if (k > num_points) k = num_points;  // Ensure k is valid
+
+//   // Reset centroids matrix
+//   centroids = cv::Mat();
+
+//   // Random number generator
+//   cv::RNG rng;
+
+//   // Set to track selected centroid indices
+//   std::set<int> selected_indices;
+
+//   // Step 1: Select the first centroid randomly
+//   int first_centroid_idx = rng.uniform(0, num_points);
+//   centroids.push_back(points.row(first_centroid_idx));
+//   selected_indices.insert(first_centroid_idx);
+
+//   // Step 2: Select the remaining centroids using K-means++ initialization
+//   for (int i = 1; i < k; ++i) {
+//     std::vector<double> distances(num_points);
+//     double total_distance = 0;
+
+//     // Step 2.1: Compute squared distances
+//     for (int j = 0; j < num_points; ++j) {
+//       double min_distance = std::numeric_limits<double>::max();
+//       for (int m = 0; m < i; ++m) {
+//         double distance = cv::norm(points.row(j) - centroids.row(m),
+//         cv::NORM_L2); double squared_distance = distance * distance;
+//         min_distance = std::min(min_distance, squared_distance);
+//       }
+//       distances[j] = min_distance;
+//       total_distance += min_distance;
+//     }
+
+//     // Step 2.2: Choose the next centroid, ensuring uniqueness
+//     int selected_centroid_idx = -1;
+//     while (true) {
+//       double random_value = rng.uniform(0.0, total_distance);
+//       double cumulative_distance = 0;
+
+//       for (int j = 0; j < num_points; ++j) {
+//         cumulative_distance += distances[j];
+//         if (cumulative_distance >= random_value) {
+//           if (selected_indices.find(j) == selected_indices.end()) {  //
+//           Ensure uniqueness
+//             selected_centroid_idx = j;
+//             break;
+//           }
+//         }
+//       }
+
+//       if (selected_centroid_idx != -1) break;  // Stop when we find a unique
+//       centroid
+//     }
+
+//     // Add the selected centroid
+//     centroids.push_back(points.row(selected_centroid_idx));
+//     selected_indices.insert(selected_centroid_idx);
+//   }
+// }
+
+int get_min_idx(const std::vector<float> &vec) {
+  auto min_iter = std::min_element(vec.begin(), vec.end());
+  int min_idx = std::distance(vec.begin(), min_iter);
+  return min_idx;
+}
+
 void clusterPoints(const cv::Mat &points, const cv::Mat &centroids,
                    std::vector<cv::Mat> &cluster) {
   // std::cout << points << std::endl;
   // number of clusters
   int k = centroids.rows;
   // Initialize each cluster with an empty cv::Mat
-  for (int i = 0; i < k; i++) {
-    cluster.push_back(cv::Mat());
-  }
+  cluster.resize(k, cv::Mat());
 
   for (int i = 0; i < points.rows; i++) {
     // Take each point
@@ -149,14 +228,22 @@ void clusterPoints(const cv::Mat &points, const cv::Mat &centroids,
       dist[j] = cv::norm(point - centroids.row(j), cv::NORM_L2);
     }
     // print_vector(dist, "dist");
-
     // get nearest dist idx
-    auto min_iter = std::min_element(dist.begin(), dist.end());
-    int min_idx = std::distance(dist.begin(), min_iter);
+    int min_idx = get_min_idx(dist);
     // std::cout << min_idx << std::endl;
 
     // push point to the cluster
     cluster[min_idx].push_back(point);
+  }
+
+  // if a cluster is empty after above assignment
+  // push random points into the cluster (use random_centroids)
+  for (int i = 0; i < k; i++) {
+    if (cluster[i].rows == 0 && cluster[i].cols == 0) {
+      cv::Mat rand_points;
+      get_random_centroids(points, k, rand_points);
+      cluster[i].push_back(rand_points);
+    }
   }
 }
 
@@ -166,7 +253,7 @@ void calculate_centroids(const std::vector<cv::Mat> &cluster,
   int k = cluster.size();
   for (int cluster_idx = 0; cluster_idx < k; cluster_idx++) {
     // int cluster_idx = entry.first;
-    // std::cout << cluster_idx << std::endl;
+    // std::cout << "Cluster Index : " << cluster_idx << std::endl;
 
     // get points in cluster
     cv::Mat points = cluster[cluster_idx];
@@ -180,9 +267,11 @@ void calculate_centroids(const std::vector<cv::Mat> &cluster,
 
       // store centroid
       std::cout << points_avg << std::endl;
-      centroids.row(cluster_idx) = points_avg;
+      points_avg.copyTo(centroids.row(cluster_idx));
     }
   }
+  // std::cout << "Recalculated centroids" << std::endl << centroids <<
+  // std::endl;
 }
 
 std::vector<float> calculate_varaince(const std::vector<cv::Mat> &cluster,
