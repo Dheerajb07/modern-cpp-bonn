@@ -2,6 +2,6 @@
 #define HOMEWORK_7_H
 
 #include "convert_dataset.hpp"
-#include "k_means.hpp"
+#include "kmeans.hpp"
 
 #endif

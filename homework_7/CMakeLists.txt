@@ -31,11 +31,11 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # target_link_libraries(convert_dataset mat_serialization ${OpenCV_LIBS})
 
 # kmeans lib
-add_library(kmeans ${PROJECT_SOURCE_DIR}/src/k_means.cpp ${PROJECT_SOURCE_DIR}/include/k_means.hpp)
+add_library(kmeans ${PROJECT_SOURCE_DIR}/src/kmeans.cpp ${PROJECT_SOURCE_DIR}/include/kmeans.hpp)
 target_link_libraries(kmeans ${OpenCV_LIBS})
 
 ## COMPILE DEV PROGRAMS
 add_subdirectory(dev/)
 
 ## COMPILE TESTS
-# add_subdirectory(tests/)
+add_subdirectory(tests/)

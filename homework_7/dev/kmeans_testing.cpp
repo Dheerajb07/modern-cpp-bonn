@@ -19,14 +19,14 @@ std::vector<cv::Mat> &GetDummyData() {
   return data;
 }
 
-cv::Mat GetAllFeatures() {
+cv::Mat Get18Kmeans() {
   // init some parameters
   const int rows_num = 1;
   const int cols_num = 10;
   cv::Mat data;
 
   for (int i = 0; i < 100; i += 20) {
-    for (size_t j = 0; j < 5; j++) {
+    for (size_t j = 0; j < 3; j++) {
       data.push_back(cv::Mat_<float>(rows_num, cols_num, i));
     }
   }
@@ -34,14 +34,16 @@ cv::Mat GetAllFeatures() {
   return data;
 }
 
-cv::Mat Get2Kmeans() {
+cv::Mat Get5Kmeans() {
   // init some parameters
   const int rows_num = 1;
   const int cols_num = 10;
   cv::Mat data;
 
-  data.push_back(cv::Mat_<float>(rows_num, cols_num, 20.000002F));
-  data.push_back(cv::Mat_<float>(rows_num, cols_num, 70.0F));
+  for (int i = 0; i < 100; i += 20) {
+    cv::Mat_<float> vec(rows_num, cols_num, i);
+    data.push_back(vec);
+  }
 
   return data;
 }
@@ -51,12 +53,12 @@ int main() {
   //   std::cout << data << std::endl;
 
   // auto gt_cluster = Get2Kmeans();
-  auto gt_cluster = GetAllFeatures();
+  auto gt_cluster = Get18Kmeans();
 
   const int dict_size = gt_cluster.rows;
-  const int iterations = 1;
+  const int iterations = 10;
   cv::Mat centroids = ipb::kMeans(data, dict_size, iterations);
-
+  cv::sort(centroids, centroids, cv::SORT_EVERY_COLUMN + cv::SORT_ASCENDING);
   std::cout << "Final Centroids : " << std::endl;
   std::cout << centroids << std::endl;
 

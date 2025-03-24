@@ -1,4 +1,4 @@
-#include "homework_7.h"
+#include "kmeans.hpp"
 #include <algorithm>
 #include <cstdio>
 #include <iostream>
@@ -7,57 +7,6 @@
 #include <set>
 #include <string>
 #include <vector>
-
-template <typename T>
-void print_vector(const std::vector<T> &vec, const std::string &vec_name) {
-  std::cout << vec_name << ": ";
-  for (auto &elem : vec) {
-    std::cout << elem << " ";
-  }
-  std::cout << std::endl;
-}
-
-std::vector<cv::Mat> &GetDummyData() {
-  // init some parameters
-  const int rows_num = 1;
-  const int cols_num = 10;
-  static std::vector<cv::Mat> data;
-
-  for (int i = 0; i < 100; i += 20) {
-    for (size_t j = 0; j < 5; j++) {
-      data.push_back(cv::Mat_<float>(rows_num, cols_num, i));
-    }
-  }
-
-  return data;
-}
-
-cv::Mat GetAllFeatures() {
-  // init some parameters
-  const int rows_num = 1;
-  const int cols_num = 10;
-  cv::Mat data;
-
-  for (int i = 0; i < 100; i += 20) {
-    for (size_t j = 0; j < 5; j++) {
-      data.push_back(cv::Mat_<float>(rows_num, cols_num, i));
-    }
-  }
-
-  return data;
-}
-
-cv::Mat Get2Kmeans() {
-  // init some parameters
-  const int rows_num = 1;
-  const int cols_num = 10;
-  cv::Mat data;
-
-  data.push_back(cv::Mat_<float>(rows_num, cols_num, 20.000002F));
-  data.push_back(cv::Mat_<float>(rows_num, cols_num, 70.0F));
-
-  return data;
-}
 
 cv::Mat get_random_centroids(const cv::Mat &points, const int k,
                              std::vector<int> &labels) {
@@ -71,7 +20,7 @@ cv::Mat get_random_centroids(const cv::Mat &points, const int k,
   std::set<int> rand_idx;
 
   // select random points as centroids
-  // std::cout << "Random centroid indexes: ";
+  //   std::cout << "Random centroid indexes: ";
   for (int cluster_idx = 0; cluster_idx < k; cluster_idx++) {
     int point_idx;
     do {
@@ -89,7 +38,7 @@ cv::Mat get_random_centroids(const cv::Mat &points, const int k,
     // assign cluster number (label) to the centroid
     labels[point_idx] = cluster_idx;
   }
-  // std::cout << std::endl;
+  //   std::cout << std::endl;
   // print_vector(labels, "Label vector");
 
   return std::move(centroids);
@@ -117,36 +66,39 @@ void clusterPoints(const cv::Mat &points, const cv::Mat &centroids,
   // number of clusters
   int k = centroids.rows;
   // Initialize each cluster with an empty cv::Mat
+  cluster.clear();
   cluster.resize(k, cv::Mat());
 
-  // resize label vector
-  labels.resize(points.rows, -1);
   for (int i = 0; i < points.rows; i++) {
     // Take each point
     cv::Mat point = points.row(i);
 
-    // assign point to cluster
-    // calc dist to k centroids
-    std::vector<float> dist = get_distance(point, centroids);
+    if (labels[i] == -1) {
+      // assign point to cluster
+      // calc dist to k centroids
+      std::vector<float> dist = get_distance(point, centroids);
 
-    // get nearest dist idx
-    int min_idx = get_min_idx(dist);
+      // get nearest dist idx
+      int min_idx = get_min_idx(dist);
 
-    // push point to the cluster
-    cluster[min_idx].push_back(point);
+      // push point to the cluster
+      cluster[min_idx].push_back(point);
 
-    // save point label
-    labels[i] = min_idx;
+      // save point label
+      labels[i] = min_idx;
+    } else {
+      cluster[labels[i]].push_back(point);
+    }
   }
 
   // if a cluster is empty after above assignment
   // push random points into the cluster (use random_centroids)
-  for (int i = 0; i < k; i++) {
-    if (cluster[i].rows == 0 && cluster[i].cols == 0) {
-      cv::Mat rand_points = get_random_centroids(points, k, labels);
-      cluster[i].push_back(rand_points);
-    }
-  }
+  //   for (int i = 0; i < k; i++) {
+  //     if (cluster[i].rows == 0 && cluster[i].cols == 0) {
+  //       cv::Mat rand_points = get_random_centroids(points, k, labels);
+  //       cluster[i].push_back(rand_points);
+  //     }
+  //   }
 }
 
 cv::Mat calculate_centroids(const std::vector<cv::Mat> &cluster) {
@@ -176,23 +128,25 @@ bool centroid_converge(const cv::Mat &new_centroids,
                        const cv::Mat &old_centroids) {
   // Convergence: L2 norm < 1e-6
   double centroid_diff = cv::norm(old_centroids - new_centroids, cv::NORM_L2);
-  if (centroid_diff < 1e-3) {
+  if (centroid_diff < 0.1) {
     return true;
   } else {
     return false;
   }
 }
 
-float totalWCSS(const std::vector<cv::Mat> &cluster, const cv::Mat &centroids){
+float totalWCSS(const std::vector<cv::Mat> &cluster, const cv::Mat &centroids) {
   // Within Cluster Sum-of-Squares : WCSS
   float total_wcss = 0;
 
   // num clusters
   int k = centroids.rows;
-  for(int cluster_idx = 0; cluster_idx < k; cluster_idx++){
+  for (int cluster_idx = 0; cluster_idx < k; cluster_idx++) {
     // get distances of each point to centroid
-    std::vector<float> dist = get_distance(centroids.row(cluster_idx),cluster[cluster_idx]);
-    float wcss = std::inner_product(dist.begin(),dist.end(),dist.begin(),0.0f);
+    std::vector<float> dist =
+        get_distance(centroids.row(cluster_idx), cluster[cluster_idx]);
+    float wcss =
+        std::inner_product(dist.begin(), dist.end(), dist.begin(), 0.0f);
 
     total_wcss += wcss;
   }
@@ -200,17 +154,18 @@ float totalWCSS(const std::vector<cv::Mat> &cluster, const cv::Mat &centroids){
   return total_wcss;
 }
 
-cv::Mat kMeans(const std::vector<cv::Mat> &dataset, int k, int max_iter) {
+cv::Mat ipb::kMeans(const std::vector<cv::Mat> &dataset, int k, int max_iter) {
   // Stack all descriptors into one cv::Mat
   cv::Mat points;
   cv::vconcat(dataset, points);
-  std::cout << "Dataset : " << std::endl << points << std::endl;
+  //   std::cout << "Dataset : " << std::endl << points << std::endl;
 
   // vector of centroids
-  std::vector<cv::Mat> centroids_list(max_iter,cv::Mat());
+  std::vector<cv::Mat> centroids_list(max_iter, cv::Mat());
 
-  // vector to store WCSS values : WCSS is an evaluation metric to find the optimal centroids
-  std::vector<float> wcss_list(k,0);
+  // vector to store WCSS values : WCSS is an evaluation metric to find the
+  // optimal centroids
+  std::vector<float> wcss_list(max_iter, 0);
 
   for (int iter = 0; iter < max_iter; iter++) {
     // cluster vector
@@ -223,8 +178,9 @@ cv::Mat kMeans(const std::vector<cv::Mat> &dataset, int k, int max_iter) {
 
     /* 2. Cluster Points */
     while (true) {
+      std::vector<int> temp_labels = labels;
       // cluster points for given centroids
-      clusterPoints(points, centroids, cluster, labels);
+      clusterPoints(points, centroids, cluster, temp_labels);
 
       // re-calculate cluster centroids after assignment
       cv::Mat new_centroids = calculate_centroids(cluster);
@@ -239,54 +195,21 @@ cv::Mat kMeans(const std::vector<cv::Mat> &dataset, int k, int max_iter) {
     }
 
     // Calc WCSS and store
-    wcss_list[iter] = totalWCSS(cluster,centroids);
+    wcss_list[iter] = totalWCSS(cluster, centroids);
 
     // store centroids
     centroids_list[iter] = centroids;
 
     // print iteration data to terminal
-    std::cout << std::endl << "Iteration " << iter << std::endl;
-    std::cout << "Centroids : " << std::endl << centroids << std::endl;
-    std::cout << "Total WCSS : " << std::endl << wcss_list[iter] << std::endl;
-    
+    // std::cout << std::endl << "Iteration " << iter << std::endl;
+    // print_cluster_data(cluster);
+    // std::cout << "Centroids : " << std::endl << centroids << std::endl;
+    // std::cout << "Total WCSS : " << std::endl << wcss_list[iter] <<
+    // std::endl;
   }
 
   // get iter idx for min total wcss
   int wcss_min_idx = get_min_idx(wcss_list);
 
   return centroids_list[wcss_min_idx];
-}
-
-cv::Mat Get3Kmeans() {
-  // init some parameters
-  const int rows_num = 1;
-  const int cols_num = 10;
-  cv::Mat data;
-
-  data.push_back(cv::Mat_<float>(rows_num, cols_num, 0.0F));
-  data.push_back(cv::Mat_<float>(rows_num, cols_num, 30.0F));
-  data.push_back(cv::Mat_<float>(rows_num, cols_num, 70.0F));
-
-  return data;
-}
-
-int main() {
-  // Dataset
-  auto dataset = GetDummyData();
-  // solution
-  // auto gt_cluster = GetAllFeatures();
-  auto gt_cluster = Get3Kmeans();
-
-  // K-Means
-  const int dict_size = gt_cluster.rows;
-  const int iterations = 10;
-  cv::Mat centroids = kMeans(dataset, dict_size, iterations);
-  cv::sort(centroids, centroids, cv::SORT_EVERY_COLUMN + cv::SORT_ASCENDING);
-
-  std::cout << " Calculated centroids : " << std::endl
-            << centroids << std::endl;
-
-  std::cout << "Correct centriods : " << std::endl << gt_cluster << std::endl;
-
-  return 0;
 }
