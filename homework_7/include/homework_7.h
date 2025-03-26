@@ -3,5 +3,6 @@
 
 #include "convert_dataset.hpp"
 #include "kmeans.hpp"
+#include "bow_dictionary.hpp"
 
 #endif
