@@ -44,8 +44,8 @@ cv::Mat get_random_centroids(const cv::Mat &points, const int k,
   return std::move(centroids);
 }
 
-std::vector<float> get_distance(const cv::Mat fromPoint,
-                                const cv::Mat toPoints) {
+std::vector<float> get_distance(const cv::Mat &fromPoint,
+                                const cv::Mat &toPoints) {
   int num_points = toPoints.rows;
   // calc dist to points
   std::vector<float> dist(num_points, 0);

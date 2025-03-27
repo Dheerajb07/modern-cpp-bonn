@@ -1,9 +1,7 @@
 #ifndef BOW_DICTIONARY_HPP
 #define BOW_DICTIONARY_HPP
 
-#include "kmeans.hpp"
 #include <opencv2/core.hpp>
-#include <vector>
 
 namespace ipb {
 
@@ -29,28 +27,24 @@ public:
   void set_params(const int max_iter, const int size,
                   const std::vector<cv::Mat> &descriptors);
 
-  // create vocab from descriptors
-  void create_vocabulary() {vocab_ = ipb::kMeans(descriptors_,dict_size_,max_iter_);}
-    
-  // update vocab when params change
-  void update_
+  // update vocabulary
+  void update_vocabulary();
 
   // Getter methods
-  int max_iterations() const { return max_iter; }
-  int size() const { return dict_size; }
-  const std::vector<cv::Mat> &descriptors() const { return descriptors; }
-  cv::Mat vocabulary() const { return vocab; }
+  int max_iterations() const { return max_iter_; }
+  int size() const { return dict_size_; }
+  const std::vector<cv::Mat> &descriptors() const { return descriptors_; }
+  const cv::Mat &vocabulary() const { return vocab_; }
 
   // Setter methods
-  void set_max_iterations(const int max_iter) { max_iter_ = max_iter; }
-  void set_size(const int size) { dict_size_ = size; }
-  void set_descriptors(const std::vector<cv::Mat> &descriptors){
-      descriptors_ = descriptors};
+  void set_max_iterations(const int max_iter);
+  void set_size(const int size);
+  void set_descriptors(const std::vector<cv::Mat> &descriptors);
 
   // other methods
-  bool empty() { return vocab.empty(); }
+  bool empty() { return vocab_.empty(); }
   int total_features() const;
-}
+};
 
 } // namespace ipb
 #endif

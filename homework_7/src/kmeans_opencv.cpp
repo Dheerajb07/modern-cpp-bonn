@@ -2,12 +2,11 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-cv::Mat ipb::kMeans(const std::vector<cv::Mat> &dataset, int k,
-                      int max_iter) {
+cv::Mat ipb::kMeans(const std::vector<cv::Mat> &dataset, int k, int max_iter) {
   // Step 1: Stack all descriptors into one cv::Mat
   cv::Mat points;
   cv::vconcat(dataset, points);
-//   std::cout << "Dataset : " << std::endl << points << std::endl;
+  //   std::cout << "Dataset : " << std::endl << points << std::endl;
 
   // Step 2: Run the OpenCV k-means algorithm
   cv::Mat labels;  // Holds the cluster assignments for each data point

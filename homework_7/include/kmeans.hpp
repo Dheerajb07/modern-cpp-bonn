@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace ipb {
-    
+
 /**
  * @brief
  * 1. Given cluster centroids i initialized in some way,
