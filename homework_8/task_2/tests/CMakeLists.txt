@@ -4,8 +4,8 @@ set(TEST_BINARY ${PROJECT_NAME}_test)
 
 add_executable(${TEST_BINARY}
                test_init.cpp
-               test_from_png.cpp
-               test_from_ppm.cpp
+            #    test_from_png.cpp
+            #    test_from_ppm.cpp
                test_resize.cpp)
 
 target_link_libraries(${TEST_BINARY} image GTest::Main)

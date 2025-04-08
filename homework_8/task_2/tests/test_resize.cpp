@@ -10,7 +10,7 @@
 using igg::Image;
 
 namespace {
-void FillDiagonalForTesting(Image* image) {
+void FillDiagonalForTesting(Image *image) {
   for (int r = 0; r < image->rows(); ++r) {
     for (int c = 0; c < image->cols(); ++c) {
       if (r == c) {
@@ -21,7 +21,7 @@ void FillDiagonalForTesting(Image* image) {
     }
   }
 }
-}  // namespace
+} // namespace
 
 TEST(TestResize, DownScaleTrivial) {
   int size = 10;
