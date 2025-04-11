@@ -2,6 +2,7 @@
 #define IMAGE_HPP
 
 #include "io_strategy.hpp"
+#include "pixel.hpp"
 #include <cstdint>
 #include <iostream>
 #include <memory>
@@ -9,21 +10,10 @@
 
 namespace igg {
 class Image {
-public:
-  class Pixel {
-  public:
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
-
-    Pixel(){};
-    Pixel(uint8_t r, uint8_t g, uint8_t b) : red(r), green(g), blue(b){};
-  };
-
 private:
   int rows_ = 0;
   int cols_ = 0;
-  int max_val_ = 255;
+  uint8_t max_val_ = 255;
   std::vector<Pixel> data_ = {};
   std::shared_ptr<IoStrategy> io_strategy_ptr_ = nullptr;
 
@@ -58,7 +48,7 @@ public:
   void UpScale(int scale);
 
   // read image from file
-  void ReadFromDisk(const std::string &filename);
+  bool ReadFromDisk(const std::string &filename);
 
   // write image to file
   void WriteToDisk(const std::string &filename);

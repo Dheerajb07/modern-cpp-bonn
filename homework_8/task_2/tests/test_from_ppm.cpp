@@ -15,7 +15,7 @@ TEST(TestImageFromPpm, InitFromFileSize) {
   image.SetIoStrategy(std::make_shared<PpmIoStrategy>());
   ASSERT_EQ(0, image.rows());
   ASSERT_EQ(0, image.cols());
-  ASSERT_TRUE(image.ReadFromDisk("data/dummy_file.ppm"));
+  ASSERT_TRUE(image.ReadFromDisk("tests/data/dummy_file.ppm"));
   ASSERT_EQ(10, image.rows());
   ASSERT_EQ(10, image.cols());
 }
@@ -25,7 +25,7 @@ TEST(TestImageFromPpm, InitFromFileContents) {
   image.SetIoStrategy(std::make_shared<PpmIoStrategy>());
   ASSERT_EQ(0, image.rows());
   ASSERT_EQ(0, image.cols());
-  ASSERT_TRUE(image.ReadFromDisk("data/dummy_file.ppm"));
+  ASSERT_TRUE(image.ReadFromDisk("tests/data/dummy_file.ppm"));
   ASSERT_EQ(10, image.rows());
   ASSERT_EQ(10, image.cols());
   for (int r = 0; r < image.rows(); ++r) {

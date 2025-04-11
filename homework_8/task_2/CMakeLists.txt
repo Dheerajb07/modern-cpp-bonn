@@ -6,6 +6,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(EXPORT_COMPILE_COMMANDS ON)
 
+## find external dependencies
+# libpng++ package
+find_package(PNG REQUIRED)
+include_directories(${PNG_INCLUDE_DIRS})
+
 # Define an option to enable/disable tests
 option(BUILD_TESTS "Build the tests" OFF)
 
@@ -13,17 +18,29 @@ option(BUILD_TESTS "Build the tests" OFF)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
-# include clang-tidy and static analyzer
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-include(ClangFormat StaticAnalyzers)
+
 
 # include directories
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-# compile Image library
-add_library(image ${PROJECT_SOURCE_DIR}/src/image.cpp ${PROJECT_SOURCE_DIR}/include/image.hpp)
+# compile strategy library
+add_library(strategies 
+            ${PROJECT_SOURCE_DIR}/src/io_strategy.cpp ${PROJECT_SOURCE_DIR}/include/io_strategy.hpp 
+            ${PROJECT_SOURCE_DIR}/src/string_utils.cpp ${PROJECT_SOURCE_DIR}/include/string_utils.hpp
+            )
+target_link_libraries(strategies PNG::PNG)
 
-if(BUILD_TESTS)
-    # compile tests
-    add_subdirectory(tests)
-endif()
+# compile image library
+add_library(image ${PROJECT_SOURCE_DIR}/src/image.cpp ${PROJECT_SOURCE_DIR}/include/image.hpp)
+target_link_libraries(image strategies)
+
+# Compile dev files
+# add_subdirectory(dev/)
+
+## TESTING
+# include clang-tidy and static analyzer
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+include(ClangFormat StaticAnalyzers)
+
+# Compile Tests
+add_subdirectory(tests)

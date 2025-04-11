@@ -81,7 +81,7 @@ std::vector<igg::Pixel> getPixels(const std::vector<std::string> &str_vec) {
 
 int main() {
   // Open the file using ifstream for reading
-  std::ifstream file("../data/pbmlib.ascii.ppm");
+  std::ifstream file("data/pbmlib.ascii.ppm");
 
   // image data variables
   std::string type;
