@@ -1,0 +1,8 @@
+build-essential
+cmake
+cppcheck
+clang-format
+clang-tidy
+libgtest-dev
+libpng-dev
+bats

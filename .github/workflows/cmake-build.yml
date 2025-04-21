@@ -1,0 +1,37 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  
+jobs:
+  hw8_build:
+    name: build homework_8
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        working-directory: homework_8/task_2
+        run: |
+          sudo apt-get update -y
+          sudo DEBIAN_FRONTEND=non-interactive \
+            xargs -a apt-requirements.txt \
+            apt-get install -y --no-install-recommends\
+            
+      - name: Build task_2
+        working-directory: homework_8/task_2
+        run: source build.sh
+
+      - name: Test task_2
+        working-directory: homework_8/task_2
+        run: ./bin/homework_8_task_2_test
+
+
+        
+
+
+
+
