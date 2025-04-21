@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo DEBIAN_FRONTEND=non-interactive \
-            xargs -a apt-requirement.txt \
+            xargs -a apt-requirements.txt \
             apt-get install -y --no-install-recommends\
             
       - name: Build task_2
