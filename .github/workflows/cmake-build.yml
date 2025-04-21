@@ -21,7 +21,7 @@ jobs:
             cppcheck \
             clang-format \
             clang-tidy \
-            bats
+            libgtest-dev
       
       # - name: Build task_1
       #   working-directory: homework_8/task_1
