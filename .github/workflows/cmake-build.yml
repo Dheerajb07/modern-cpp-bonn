@@ -14,23 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Dependencies
+        working-directory: homework_8/task_2
         run: |
-          sudo apt install \
-            build-essential \
-            cmake \
-            cppcheck \
-            clang-format \
-            clang-tidy \
-            libgtest-dev
-      
-      # - name: Build task_1
-      #   working-directory: homework_8/task_1
-      #   run: source build.sh
-
-      # - name: Test task_1
-      #   working-directory: homework_8/task_1
-      #   run: bats test_stack_limit.sh
-
+          sudo apt-get update -y
+          sudo DEBIAN_FRONTEND=non-interactive \
+            xargs -a apt-requirement.txt \
+            apt-get install -y --no-install-recommends\
+            
       - name: Build task_2
         working-directory: homework_8/task_2
         run: source build.sh

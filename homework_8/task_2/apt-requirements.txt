@@ -1,0 +1,15 @@
+# CXX compilers, build system and toolchain
+build-essential
+cmake
+cppcheck
+clang-format
+clang-tidy
+
+# gtest package
+libgtest-dev
+
+# png package
+libpng-dev
+
+# bats for task_1 testing
+bats
