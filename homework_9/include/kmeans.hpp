@@ -21,6 +21,6 @@ namespace ipb {
  */
 cv::Mat kMeans(const std::vector<cv::Mat> &dataset, int k, int max_iter);
 
-} // namespace ipb
+}  // namespace ipb
 
 #endif

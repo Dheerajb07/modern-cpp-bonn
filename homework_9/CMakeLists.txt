@@ -30,5 +30,12 @@ target_link_libraries(kmeans ${OpenCV_LIBS})
 add_library(bow_dictionary ${PROJECT_SOURCE_DIR}/src/bow_dictionary.cpp ${PROJECT_SOURCE_DIR}/include/bow_dictionary.hpp)
 target_link_libraries(bow_dictionary kmeans ${OpenCV_LIBS})
 
+# histogram lib
+add_library(histogram 
+            ${PROJECT_SOURCE_DIR}/src/histogram.cpp ${PROJECT_SOURCE_DIR}/include/histogram.hpp
+            ${PROJECT_SOURCE_DIR}/src/histogram_utils.cpp ${PROJECT_SOURCE_DIR}/include/histogram_utils.hpp
+            )
+target_link_libraries(histogram bow_dictionary ${OpenCV_LIBS})
+
 ## COMPILE TESTS
 add_subdirectory(tests/)

@@ -4,9 +4,8 @@
 // Copyright (c) 2020 Ignacio Vizzo, all rights reserved
 #ifndef TEST_DATA_HPP_
 #define TEST_DATA_HPP_
-#include <vector>
-
 #include <opencv2/core/mat.hpp>
+#include <vector>
 
 //  00, 00, 00, 00, 00, 00, 00, 00, 00, 00;
 //  00, 00, 00, 00, 00, 00, 00, 00, 00, 00;
@@ -49,4 +48,4 @@ cv::Mat Get5Kmeans();
 // 115, 115, 115, 115, 115, 115, 115, 115, 115, 115;
 cv::Mat Get3Features();
 
-#endif // TEST_DATA_HPP_
+#endif  // TEST_DATA_HPP_
