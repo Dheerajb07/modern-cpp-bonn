@@ -16,3 +16,17 @@ int argminDist(const std::vector<float> &vec) {
     int min_idx = std::distance(vec.begin(), min_iter);
     return min_idx;
 }
+
+std::vector<int> split_string(std::string &s, const std::string &delimiter) {
+    std::vector<int> data;
+    size_t pos = 0;
+    int token;
+    while ((pos = s.find(delimiter)) != std::string::npos) {
+        token = stoi(s.substr(0, pos));
+        data.push_back(token);
+        s.erase(0, pos + delimiter.length());
+    }
+    data.push_back(stoi(s));
+
+    return data;
+}

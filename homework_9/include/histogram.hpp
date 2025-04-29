@@ -21,12 +21,12 @@ public:
     // compute histogram
     void compute(const cv::Mat &descriptors, const BowDictionary &dictionary);
 
-    // operator<<();
-    void WriteToCSV(const std::string &filename);
-    Histogram ReadFromCSV(const std::string &filename);
+    // stream and access operators
+    friend std::ostream &operator<<(std::ostream &os, const Histogram &hist);
+    int operator[](std::size_t idx) const { return data_.at(idx); }
+    int &operator[](std::size_t idx) { return data_.at(idx); }
 
     // Imitate stl_vector functionality
-    int &operator[](int idx) { return data_[idx]; }
     std::vector<int> &data() { return data_; }
     size_t size() const { return data_.size(); }
     bool empty() const { return data_.empty(); }
@@ -34,6 +34,10 @@ public:
     std::vector<int>::iterator end() { return data_.end(); }
     std::vector<int>::const_iterator cbegin() const { return data_.cbegin(); }
     std::vector<int>::const_iterator cend() const { return data_.cend(); }
+
+    // Read - Write static members
+    static void WriteToCSV(const std::string &filename, const Histogram &hist);
+    static Histogram ReadFromCSV(const std::string &filename);
 };
 }  // namespace ipb
 

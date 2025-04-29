@@ -32,7 +32,7 @@ public:
     void set_vocabulary(const cv::Mat &vocab) { vocabulary_ = vocab; }
 
     // other methods
-    bool empty() { return vocabulary_.empty(); }
+    bool empty() const { return vocabulary_.empty(); }
     int size() const { return vocabulary_.rows; };
 };
 

@@ -21,6 +21,15 @@ std::vector<float> L2distance(const cv::Mat &fromPoint,
  */
 int argminDist(const std::vector<float> &vec);
 
+/**
+ * @brief  Split a number string into a integer vector using a specified
+ * delimiter.
+ * @param[in]  s  input string 'std::string'.
+ * @param[in]  delimiter input delimiter 'std::string'.
+ * @return  std::vector<int>.
+ */
+std::vector<int> split_string(std::string &s, const std::string &delimiter);
+
 }  // namespace ipb
 
 #endif
