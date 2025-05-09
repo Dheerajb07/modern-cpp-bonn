@@ -1,5 +1,7 @@
 #include "histogram_utils.hpp"
 
+namespace ipb {
+
 std::vector<float> L2distance(const cv::Mat &fromPoint,
                               const cv::Mat &toPoints) {
     int num_points = toPoints.rows;
@@ -30,3 +32,5 @@ std::vector<int> split_string(std::string &s, const std::string &delimiter) {
 
     return data;
 }
+
+}  // namespace ipb

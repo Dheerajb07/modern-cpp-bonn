@@ -32,11 +32,13 @@ public:
     bool empty() const { return data_.empty(); }
     std::vector<int>::iterator begin() { return data_.begin(); }
     std::vector<int>::iterator end() { return data_.end(); }
+    std::vector<int>::const_iterator begin() const { return data_.cbegin(); }
+    std::vector<int>::const_iterator end() const { return data_.cend(); }
     std::vector<int>::const_iterator cbegin() const { return data_.cbegin(); }
     std::vector<int>::const_iterator cend() const { return data_.cend(); }
 
     // Read - Write static members
-    static void WriteToCSV(const std::string &filename, const Histogram &hist);
+    void WriteToCSV(const std::string &filename);
     static Histogram ReadFromCSV(const std::string &filename);
 };
 }  // namespace ipb
