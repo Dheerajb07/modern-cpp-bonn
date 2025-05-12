@@ -16,8 +16,8 @@ Histogram::Histogram(const cv::Mat &descriptors,
 
 void Histogram::compute(const cv::Mat &descriptors,
                         const BowDictionary &dictionary) {
-    if (!descriptors.empty() || !dictionary.empty()) {
-        // if either descriptors of dictionary is empty exit function
+    if (descriptors.empty() || dictionary.empty()) {
+        // if either descriptors or dictionary is empty exit function
         return;
     }
 
@@ -32,7 +32,7 @@ void Histogram::compute(const cv::Mat &descriptors,
         // get nearest dist idx
         int min_idx = argminDist(dist);
         // Increment the count in histogram vector
-        this->data_[i] += 1;
+        this->data_[min_idx] += 1;
     }
 }
 
